@@ -36,8 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
         throws Exception
     {
         http
-            .httpBasic()
-            .and().authorizeRequests()
+            .httpBasic().and()
+            .authorizeRequests()
             .antMatchers("/").permitAll()
             .antMatchers(
                 "/index.html",
@@ -51,6 +51,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
             .anyRequest().authenticated()
             .and().csrf().csrfTokenRepository(csrfTokenRepository())
             .and().addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+
+//        http
+//            .httpBasic().disable();
     }
 
     @Bean

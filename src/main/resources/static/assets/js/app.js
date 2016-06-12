@@ -5,7 +5,8 @@
         'ngRoute',
         'ngMaterial',
         'ngMessages',
-        'ngStorage'
+        'ngStorage',
+        'ngAnimate'
     ])
         .config(config)
         .run(run);

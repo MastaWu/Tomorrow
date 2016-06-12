@@ -4,7 +4,8 @@
     
     function aboutController(aboutService) {
         var vm = this;
-
+        vm.pageClass = 'page-about';
+        
         vm.greeting = {};
         var response = aboutService.checkRole();
         response.then(function(data){
