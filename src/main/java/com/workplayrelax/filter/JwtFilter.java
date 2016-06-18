@@ -5,6 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -19,9 +23,20 @@ import java.io.IOException;
  * Stephen Wu
  * Copyright 2016
  */
+@Configuration
 public class JwtFilter extends GenericFilterBean
 {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private Environment env;
+
+    private String secret;
+
+    public JwtFilter(@Value("${tomorrow.authentication.secret}") String secret)
+    {
+        this.secret = secret;
+    }
 
     @Override
     public void doFilter(final ServletRequest req,
@@ -45,7 +60,7 @@ public class JwtFilter extends GenericFilterBean
         {
             final Claims claims =
                 Jwts.parser()
-                    .setSigningKey("secret")
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
 

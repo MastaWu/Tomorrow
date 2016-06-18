@@ -13,6 +13,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  * Copyright 2016
  */
 @RestController
+@PropertySource("classpath:/application.properties")
 @RequestMapping("/user")
 public class UserController
 {
@@ -39,10 +42,8 @@ public class UserController
     @Autowired
     private UserRepository userRepository;
 
-    public UserController()
-    {
-
-    }
+    @Value("${tomorrow.authentication.secret}")
+    private String secret;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody LoginResponse login(@RequestBody final UserDTO login)
@@ -69,7 +70,7 @@ public class UserController
             .claim("role", "ROLE_ADMIN")
             .setIssuedAt(now)
             .setExpiration(expiration)
-            .signWith(SignatureAlgorithm.HS512, "secret")
+            .signWith(SignatureAlgorithm.HS512, secret)
             .compact();
 
         return new LoginResponse(token);
